@@ -97,7 +97,7 @@ function WizardStepForm({
   return (
     <>
       <div className="min-h-0 flex-1 overflow-y-auto pb-4">
-        <div className="glass-panel p-5">
+        <div className="glass-panel min-w-0 overflow-hidden p-5">
           <div className="mb-5">
             <h2 className="text-lg font-semibold leading-snug">{step.title}</h2>
             {step.description && (

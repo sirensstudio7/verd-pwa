@@ -31,27 +31,27 @@ export function WeightStepper({
   }
 
   return (
-    <div className="flex items-start gap-3">
-      <div className="w-[9.5rem] shrink-0">
-        <Label className="whitespace-nowrap text-base font-semibold leading-snug text-foreground">
-          {label}
-        </Label>
+    <div className="min-w-0 space-y-3">
+      <div className="min-w-0">
+        <Label className="text-base font-semibold leading-snug text-foreground">{label}</Label>
         {hint && (
           <p className="mt-0.5 line-clamp-1 text-xs leading-snug text-muted-foreground">{hint}</p>
         )}
       </div>
-      <div className="flex flex-1 items-center justify-end gap-2 pt-0.5">
+
+      <div className="flex min-w-0 items-center justify-between gap-2">
         <Button
           type="button"
           variant="outline"
           size="icon"
           onClick={decrement}
           aria-label="Decrease"
-          className="shrink-0"
+          className="size-10 shrink-0"
         >
           <Minus className="h-4 w-4" />
         </Button>
-        <div className="relative w-[4.5rem] shrink-0">
+
+        <div className="relative min-w-0 flex-1">
           <Input
             type="number"
             value={value || ''}
@@ -68,19 +68,20 @@ export function WeightStepper({
               if (max !== undefined) next = Math.min(max, next)
               onChange(Math.max(min, next))
             }}
-            className="no-spinners h-11 w-full px-2 pr-7 text-base"
+            className="no-spinners h-10 w-full px-3 pr-8 text-base"
           />
           <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-medium text-muted-foreground">
             {unit}
           </span>
         </div>
+
         <Button
           type="button"
           variant="default"
           size="icon"
           onClick={increment}
           aria-label="Increase"
-          className="shrink-0"
+          className="size-10 shrink-0"
         >
           <Plus className="h-4 w-4" />
         </Button>
