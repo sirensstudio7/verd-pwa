@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslation } from '@/lib/i18n/LocaleProvider'
 import { cn } from '@/lib/utils'
 
 interface StatusBadgeProps {
@@ -6,6 +9,8 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ online, className }: StatusBadgeProps) {
+  const { t } = useTranslation()
+
   return (
     <span
       className={cn(
@@ -23,7 +28,7 @@ export function StatusBadge({ online, className }: StatusBadgeProps) {
         )}
         aria-hidden
       />
-      {online ? 'Online' : 'Offline'}
+      {online ? t('status.online') : t('status.offline')}
     </span>
   )
 }

@@ -22,7 +22,6 @@ import type {
 } from '@/lib/api/types'
 import { formatErrorMessage } from '@/lib/format'
 import { FACILITY_ID } from '@/lib/streams/definitions'
-import { useOnlineStatus } from '@/hooks/useOnlineStatus'
 
 interface StreamWizardProps {
   stream: StreamDefinition
@@ -167,7 +166,6 @@ export function StreamWizard({
   onStepChange,
   onComplete,
 }: StreamWizardProps) {
-  const online = useOnlineStatus(simulateOffline)
   const createBatch = useCreateBatch()
   const updateStep = useUpdateBatchStep()
   const mintBatch = useMintBatch()
@@ -243,7 +241,6 @@ export function StreamWizard({
 
   const header = (
     <AppHeader
-      online={online}
       showBack
       hideTitle
       onBack={onBack}
@@ -278,7 +275,7 @@ export function StreamWizard({
     return (
       <div className="flex min-h-0 flex-1 flex-col">
         {header}
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6 pt-6">
+        <div className="flex min-h-0 flex-1 flex-col px-5 pt-6">
           {streamHeading}
           {progress}
           <MintStep

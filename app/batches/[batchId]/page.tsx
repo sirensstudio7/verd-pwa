@@ -7,8 +7,6 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useBatch, useMintBatch } from '@/lib/api/batches'
 import { getStreamById } from '@/lib/streams/definitions'
-import { useOfflineDemo } from '@/hooks/useOfflineDemo'
-import { useOnlineStatus } from '@/hooks/useOnlineStatus'
 import { formatErrorMessage } from '@/lib/format'
 import { toast } from 'sonner'
 
@@ -16,8 +14,6 @@ export default function BatchDetailPage() {
   const params = useParams<{ batchId: string }>()
   const router = useRouter()
   const batchId = params.batchId
-  const { simulateOffline } = useOfflineDemo()
-  const online = useOnlineStatus(simulateOffline)
   const { data: batch, isPending, isFetching } = useBatch(batchId)
   const mintBatch = useMintBatch()
   const showLoading = isPending && isFetching && !batch
@@ -68,7 +64,6 @@ export default function BatchDetailPage() {
   return (
     <>
       <AppHeader
-        online={online}
         showBack
         hideTitle
         onBack={() => router.push('/')}

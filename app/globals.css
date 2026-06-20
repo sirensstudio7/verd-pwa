@@ -49,6 +49,12 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  a[href] {
+    @apply cursor-pointer;
+  }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
     min-height: 100dvh;
@@ -107,4 +113,10 @@
 
 [data-sonner-toast].verdana-toast [data-icon] {
   margin-top: 0;
+}
+
+button:not(:disabled),
+[role='button']:not([aria-disabled='true']),
+a[href] {
+  cursor: pointer;
 }

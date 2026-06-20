@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { BatchCard } from '@/components/dashboard/ActiveFloorList'
+import { FilteredBatchList } from '@/components/dashboard/FilteredBatchList'
 import { AppHeader } from '@/components/layout/AppHeader'
 import { PageContent } from '@/components/layout/PageContent'
 import { SectionHeader } from '@/components/layout/SectionHeader'
@@ -9,13 +9,11 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useAllBatches, useFacility } from '@/lib/api/batches'
 import type { StreamCategory } from '@/lib/api/types'
 import { useBatchNavigation } from '@/hooks/useBatchNavigation'
-import { useOfflineDemo } from '@/hooks/useOfflineDemo'
-import { useOnlineStatus } from '@/hooks/useOnlineStatus'
+import { useTranslation } from '@/lib/i18n/LocaleProvider'
 
 export default function ActivityPage() {
   const { data: facility } = useFacility()
-  const { simulateOffline } = useOfflineDemo()
-  const online = useOnlineStatus(simulateOffline)
+  const { t } = useTranslation()
   const [category, setCategory] = useState<StreamCategory>('plastic')
   const { data: batches = [], isPending, isFetching } = useAllBatches(category)
   const showLoading = isPending && isFetching && batches.length === 0
@@ -24,18 +22,17 @@ export default function ActivityPage() {
   return (
     <>
       <AppHeader
-        title="Batch History"
+        title={t('activity.title')}
         subtitle={facility?.label}
-        online={online}
         categoryTab={{ value: category, onChange: setCategory }}
       />
 
       <PageContent>
         <section>
           <SectionHeader
-            title="All batches"
+            title={t('activity.allBatches')}
             count={!showLoading ? batches.length : undefined}
-            countLabel="total"
+            countLabel={t('activity.total')}
           />
           {showLoading ? (
             <div className="divide-y divide-border/50">
@@ -58,14 +55,14 @@ export default function ActivityPage() {
             </div>
           ) : batches.length === 0 ? (
             <div className="overflow-hidden rounded-2xl border border-dashed border-border/70 bg-white/60 px-5 py-10 text-center">
-              <p className="text-sm text-muted-foreground">No batches yet for this category.</p>
+              <p className="text-sm text-muted-foreground">{t('activity.noBatches')}</p>
             </div>
           ) : (
-            <div className="divide-y divide-border/50">
-              {batches.map((batch) => (
-                <BatchCard key={batch.id} batch={batch} onClick={() => navigateBatch(batch)} />
-              ))}
-            </div>
+            <FilteredBatchList
+              batches={batches}
+              isLoading={false}
+              onBatchClick={navigateBatch}
+            />
           )}
         </section>
       </PageContent>

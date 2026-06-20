@@ -68,7 +68,7 @@ export function WeightStepper({
               if (max !== undefined) next = Math.min(max, next)
               onChange(Math.max(min, next))
             }}
-            className="no-spinners h-10 w-full px-3 pr-8 text-base"
+            className="no-spinners h-10 w-full px-2 text-base"
           />
           <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-medium text-muted-foreground">
             {unit}

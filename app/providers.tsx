@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { Toaster } from '@/components/ui/toaster'
 import { AppShell } from '@/components/layout/AppShell'
+import { LocaleProvider } from '@/lib/i18n/LocaleProvider'
 import { useOfflineDemo } from '@/hooks/useOfflineDemo'
 import { useOnlineStatus } from '@/hooks/useOnlineStatus'
 
@@ -62,7 +63,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppProviders>{children}</AppProviders>
+      <LocaleProvider>
+        <AppProviders>{children}</AppProviders>
+      </LocaleProvider>
     </QueryClientProvider>
   )
 }

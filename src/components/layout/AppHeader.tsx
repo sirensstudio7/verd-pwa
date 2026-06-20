@@ -1,20 +1,23 @@
-import { VerdanaLogo } from '@/components/brand/VerdanaLogo'
+'use client'
+
 import { ModeTabs } from '@/components/dashboard/ModeTabs'
 import { StreamPicker } from '@/components/dashboard/StreamPicker'
-import { StatusBadge } from '@/components/layout/StatusBadge'
+import { VerdanaLogo } from '@/components/brand/VerdanaLogo'
 import { Button } from '@/components/ui/button'
 import type { StreamCategory, StreamDefinition } from '@/lib/api/types'
+import { useTranslation } from '@/lib/i18n/LocaleProvider'
 import { getCategoryIcon } from '@/lib/streams/icons'
 import { cn } from '@/lib/utils'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Settings } from 'lucide-react'
+import Link from 'next/link'
 
 interface AppHeaderProps {
   title?: string
   subtitle?: string
-  online: boolean
   showBack?: boolean
   onBack?: () => void
   hideTitle?: boolean
+  showSettings?: boolean
   categoryTab?: {
     value: StreamCategory
     onChange: (value: StreamCategory) => void
@@ -35,6 +38,7 @@ export function CategoryBadge({
   category: StreamCategory
   className?: string
 }) {
+  const { t } = useTranslation()
   const CategoryIcon = getCategoryIcon(category)
   return (
     <div
@@ -45,7 +49,7 @@ export function CategoryBadge({
       )}
     >
       <CategoryIcon className="h-3.5 w-3.5" strokeWidth={2} />
-      {category === 'plastic' ? 'Plastic' : 'Organic'}
+      {category === 'plastic' ? t('category.plastic') : t('category.organic')}
     </div>
   )
 }
@@ -74,68 +78,96 @@ export function HeaderTitle({
   )
 }
 
+const headerIconButtonClassName =
+  'size-10 shrink-0 cursor-pointer rounded-[12px] border border-border/60 bg-white/80'
+
+function SettingsButton() {
+  const { t } = useTranslation()
+
+  return (
+    <Button
+      variant="ghost"
+      size="iconSm"
+      asChild
+      aria-label={t('common.settings')}
+      className={headerIconButtonClassName}
+    >
+      <Link href="/settings">
+        <Settings className="h-4 w-4" />
+      </Link>
+    </Button>
+  )
+}
+
+function HeaderActions({ showSettings }: { showSettings: boolean }) {
+  if (!showSettings) return null
+  return <SettingsButton />
+}
+
 export function AppHeader({
   title = 'Verdana Protocol',
   subtitle = 'Post-Sort Operator · PVP Facility #04',
-  online,
   showBack,
   onBack,
   hideTitle,
+  showSettings = true,
   categoryTab,
 }: AppHeaderProps) {
+  const { t } = useTranslation()
+
   return (
     <header
-        className={cn(
-          'relative z-30 shrink-0 overflow-hidden border-b border-border/50 bg-white/90 backdrop-blur-lg',
-          categoryTab && 'rounded-b-[16px]',
-        )}
-      >
-        {categoryTab ? (
-          <>
-            <div className="flex h-[72px] min-h-[72px] items-center justify-between px-5">
-              <VerdanaLogo className="shrink-0" />
-              <StatusBadge online={online} />
-            </div>
-            <div className="px-5 pb-4 pt-3">
-              <HeaderTitle title={title} subtitle={subtitle} />
-              <div className="mt-3">
-                <ModeTabs
-                  value={categoryTab.value}
-                  onChange={categoryTab.onChange}
-                  embedded
-                />
-              </div>
-              {categoryTab.streams && categoryTab.onStreamClick && (
-                <StreamPicker
-                  streams={categoryTab.streams}
-                  onStreamClick={categoryTab.onStreamClick}
-                />
-              )}
-            </div>
-          </>
-        ) : (
-          <div className="flex h-[72px] min-h-[72px] items-center px-5">
-            <div className="flex w-full items-center justify-between gap-3">
-              <div className="flex min-w-0 flex-1 items-center gap-3">
-                {showBack ? (
-                  <Button
-                    variant="ghost"
-                    size="iconSm"
-                    onClick={() => onBack?.()}
-                    aria-label="Go back"
-                    className="size-10 shrink-0 rounded-xl border border-border/60 bg-white/80"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                  </Button>
-                ) : (
-                  <VerdanaLogo className="shrink-0" />
-                )}
-                {!hideTitle && <HeaderTitle title={title} subtitle={subtitle} />}
-              </div>
-              <StatusBadge online={online} />
-            </div>
+      className={cn(
+        'relative z-30 shrink-0 overflow-hidden border-b border-border/50 bg-white/90 backdrop-blur-lg',
+        categoryTab && 'rounded-b-[16px]',
+      )}
+    >
+      {categoryTab ? (
+        <>
+          <div className="flex h-[72px] min-h-[72px] items-center justify-between px-5">
+            <VerdanaLogo className="shrink-0" />
+            <HeaderActions showSettings={showSettings} />
           </div>
-        )}
-      </header>
+          <div className="px-5 pb-4 pt-3">
+            <HeaderTitle title={title} subtitle={subtitle} />
+            <div className="mt-3">
+              <ModeTabs
+                value={categoryTab.value}
+                onChange={categoryTab.onChange}
+                embedded
+              />
+            </div>
+            {categoryTab.streams && categoryTab.onStreamClick && (
+              <StreamPicker
+                streams={categoryTab.streams}
+                onStreamClick={categoryTab.onStreamClick}
+              />
+            )}
+          </div>
+        </>
+      ) : (
+        <div className="flex h-[72px] min-h-[72px] items-center px-5">
+          <div className="flex w-full items-center justify-between gap-3">
+            <div className="flex min-w-0 flex-1 items-center gap-3">
+              {showBack ? (
+                <Button
+                  variant="ghost"
+                  size="iconSm"
+                  onClick={() => onBack?.()}
+                  aria-label={t('common.goBack')}
+                  className={headerIconButtonClassName}
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+              ) : (
+                <VerdanaLogo className="shrink-0" />
+              )}
+              {!hideTitle && <HeaderTitle title={title} subtitle={subtitle} />}
+            </div>
+            <HeaderActions showSettings={showSettings} />
+          </div>
+        </div>
+      )}
+    </header>
   )
 }

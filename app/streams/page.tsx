@@ -6,22 +6,19 @@ import { AppHeader } from '@/components/layout/AppHeader'
 import { useFacility } from '@/lib/api/batches'
 import type { StreamCategory } from '@/lib/api/types'
 import { getStreamsByCategory } from '@/lib/streams/definitions'
-import { useOfflineDemo } from '@/hooks/useOfflineDemo'
-import { useOnlineStatus } from '@/hooks/useOnlineStatus'
+import { useTranslation } from '@/lib/i18n/LocaleProvider'
 
 export default function StreamsPage() {
   const router = useRouter()
   const { data: facility } = useFacility()
-  const { simulateOffline } = useOfflineDemo()
-  const online = useOnlineStatus(simulateOffline)
+  const { t } = useTranslation()
   const [category, setCategory] = useState<StreamCategory>('plastic')
   const streams = getStreamsByCategory(category)
 
   return (
     <AppHeader
-      title="Start New"
-      subtitle={facility?.label ?? 'Select a processing stream'}
-      online={online}
+      title={t('streams.startNew')}
+      subtitle={facility?.label ?? t('streams.selectStream')}
       categoryTab={{
         value: category,
         onChange: setCategory,

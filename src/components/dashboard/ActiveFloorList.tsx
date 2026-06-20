@@ -1,68 +1,13 @@
 'use client'
 
 import { SectionHeader } from '@/components/layout/SectionHeader'
+import { FilteredBatchList } from '@/components/dashboard/FilteredBatchList'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { Batch } from '@/lib/api/types'
-import { formatNumber } from '@/lib/format'
-import { getStreamById } from '@/lib/streams/definitions'
-import { getStreamIcon } from '@/lib/streams/icons'
+import { useTranslation } from '@/lib/i18n/LocaleProvider'
 import { Layers } from 'lucide-react'
 
-interface BatchCardProps {
-  batch: Batch
-  onClick: () => void
-}
-
-function statusLabel(status: Batch['status']) {
-  switch (status) {
-    case 'in_progress':
-      return 'In progress'
-    case 'ready_to_mint':
-      return 'Ready to mint'
-    case 'minted':
-      return 'Minted'
-    default:
-      return 'Draft'
-  }
-}
-
-export function BatchCard({ batch, onClick }: BatchCardProps) {
-  const stream = getStreamById(batch.streamId)
-  const Icon = getStreamIcon(batch.streamId)
-  const label = stream
-    ? stream.productLabel
-    : `Batch ${String(batch.batchNumber).padStart(2, '0')}`
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="flex w-full items-center gap-3.5 py-3.5 text-left active:opacity-70"
-    >
-      <div
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
-        style={{
-          backgroundColor: stream?.accentBg ?? 'hsl(140 18% 93%)',
-          color: stream?.accentColor ?? 'hsl(152 48% 22%)',
-        }}
-      >
-        <Icon className="h-5 w-5" aria-hidden />
-      </div>
-
-      <div className="min-w-0 flex-1">
-        <p className="truncate font-medium text-foreground">{label}</p>
-        <p className="mt-0.5 text-xs text-muted-foreground">
-          #{String(batch.batchNumber).padStart(2, '0')} · {statusLabel(batch.status)}
-        </p>
-      </div>
-
-      <p className="shrink-0 text-right text-lg font-semibold tabular-nums text-foreground">
-        {formatNumber(batch.weightKg)}
-        <span className="ml-0.5 text-xs font-normal text-muted-foreground">kg</span>
-      </p>
-    </button>
-  )
-}
+export { BatchCard } from '@/components/dashboard/BatchCard'
 
 interface ActiveFloorListProps {
   batches: Batch[]
@@ -84,10 +29,12 @@ function BatchRowSkeleton() {
 }
 
 export function ActiveFloorList({ batches, isLoading, onBatchClick }: ActiveFloorListProps) {
+  const { t } = useTranslation()
+
   return (
     <section className="mb-10">
       <SectionHeader
-        title="Active on floor"
+        title={t('dashboard.activeOnFloor')}
         count={!isLoading && batches.length > 0 ? batches.length : undefined}
       />
       {isLoading ? (
@@ -103,17 +50,17 @@ export function ActiveFloorList({ batches, isLoading, onBatchClick }: ActiveFloo
           >
             <Layers className="h-10 w-10" strokeWidth={1.5} />
           </div>
-          <p className="text-lg font-medium text-foreground">No active batches</p>
+          <p className="text-lg font-medium text-foreground">{t('dashboard.noActiveBatches')}</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Start a new stream below to begin processing.
+            {t('dashboard.startNewStream')}
           </p>
         </div>
       ) : (
-        <div className="divide-y divide-border/50">
-          {batches.map((batch) => (
-            <BatchCard key={batch.id} batch={batch} onClick={() => onBatchClick(batch)} />
-          ))}
-        </div>
+        <FilteredBatchList
+          batches={batches}
+          isLoading={false}
+          onBatchClick={onBatchClick}
+        />
       )}
     </section>
   )

@@ -17,7 +17,7 @@ export function StreamPicker({ streams, onStreamClick }: StreamPickerProps) {
             key={stream.id}
             type="button"
             onClick={() => onStreamClick(stream.id)}
-            className="flex flex-col items-center gap-1.5 rounded-xl p-2 text-center transition-colors hover:bg-muted/40 active:scale-[0.98]"
+            className="flex cursor-pointer flex-col items-center gap-1.5 rounded-xl p-2 text-center transition-colors hover:bg-muted/40 active:scale-[0.98]"
           >
             <div className="relative shrink-0">
               <div

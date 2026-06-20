@@ -17,7 +17,7 @@ export function PolymerToggle({ value, options, onChange }: PolymerToggleProps) 
             type="button"
             onClick={() => onChange(option.value)}
             className={cn(
-              'relative rounded-xl py-3.5 text-sm font-semibold transition-all duration-200 active:scale-[0.98]',
+              'relative rounded-xl py-3.5 text-sm font-semibold transition-all duration-200 active:scale-[0.98] cursor-pointer',
               active
                 ? 'bg-primary text-primary-foreground shadow-sm'
                 : 'text-muted-foreground hover:text-foreground',
